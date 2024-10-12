@@ -707,14 +707,16 @@ services:
     volumes:
       - ./volumes/unstructured:/app/data
 
-  # boto3proxy:
-  #   build:
-  #     context: boto3_proxy
-  #     dockerfile: Dockerfile
-  #   expose:
-  #     - 8000
-  #   ports:
-  #     - "8000:8000"
+  boto3proxy:
+    build:
+      context: boto3_proxy
+      dockerfile: Dockerfile
+    volumes:
+      - ~/.aws:/root/.aws
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
 
 networks:
   # create a network between sandbox, api and ssrf_proxy, and can not access outside.
