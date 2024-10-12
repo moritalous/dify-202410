@@ -31,3 +31,16 @@ def aws_api(input: Input):
 
     except Exception as e:
         return JSONResponse(content=str(e), status_code=status.HTTP_400_BAD_REQUEST)
+
+
+@app.post("/credentials", summary="Get AWS credentials")
+def credentials():
+
+    try:
+
+        client = boto3.Session().get_credentials().get_frozen_credentials()
+        return client
+
+    except Exception as e:
+        return JSONResponse(content=str(e), status_code=status.HTTP_400_BAD_REQUEST)
+
