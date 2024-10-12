@@ -25,6 +25,7 @@ http_access deny manager
 http_access allow localhost
 include /etc/squid/conf.d/*.conf
 # http_access deny all
+http_access allow all
 
 ################################## Proxy Server ################################
 http_port ${HTTP_PORT}
