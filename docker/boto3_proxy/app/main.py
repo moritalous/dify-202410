@@ -37,10 +37,13 @@ def aws_api(input: Input):
 def credentials():
 
     try:
+        response = boto3.Session().get_credentials().get_frozen_credentials()
 
-        client = boto3.Session().get_credentials().get_frozen_credentials()
-        return client
+        return {
+            "access_key": response.access_key,
+            "secret_key": response.secret_key,
+            "token": response.token,
+        }
 
     except Exception as e:
         return JSONResponse(content=str(e), status_code=status.HTTP_400_BAD_REQUEST)
-
