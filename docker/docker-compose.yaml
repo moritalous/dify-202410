@@ -713,6 +713,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ~/.aws:/root/.aws
+    restart: always
     expose:
       - 8000
     ports:
