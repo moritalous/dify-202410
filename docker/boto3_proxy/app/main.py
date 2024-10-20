@@ -71,7 +71,9 @@ def aws_api(input: RetrievalParams):
         client = boto3.client("bedrock-agent-runtime", region_name="us-east-1")
         response = client.retrieve(
             knowledgeBaseId=input.knowledge_id,
-            retrievalQuery=input.query,
+            retrievalQuery={
+                "text": input.query,
+            },
             retrievalConfiguration={
                 "vectorSearchConfiguration": {
                     "numberOfResults": input.retrieval_setting.top_k
