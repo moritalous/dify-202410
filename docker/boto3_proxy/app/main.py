@@ -47,3 +47,51 @@ def credentials():
 
     except Exception as e:
         return JSONResponse(content=str(e), status_code=status.HTTP_400_BAD_REQUEST)
+
+
+## Bedrock Knowledge Bases
+
+
+class RetrievalSetting(BaseModel):
+    top_k: int
+    score_threshold: float
+
+
+class RetrievalParams(BaseModel):
+    knowledge_id: str
+    query: str
+    retrieval_setting: RetrievalSetting
+
+
+@app.post("/retrieval", summary="Retrieve from Bedrock Knowledge Bases")
+def aws_api(input: RetrievalParams):
+
+    try:
+
+        client = boto3.client("bedrock-agent-runtime", region_name="us-east-1")
+        response = client.retrieve(
+            knowledgeBaseId=input.knowledge_id,
+            retrievalQuery=input.query,
+            retrievalConfiguration={
+                "vectorSearchConfiguration": {
+                    "numberOfResults": input.retrieval_setting.top_k
+                }
+            },
+        )
+
+        retrieval_results = response["retrievalResults"]
+
+        records = [
+            {
+                "content": result["content"]["text"],
+                "score": result["score"],
+                "title": result["location"]["s3Location"]["uri"],
+                "metadata": result["metadata"],
+            }
+            for result in retrieval_results
+        ]
+
+        return {"records": records}
+
+    except Exception as e:
+        return JSONResponse(content=str(e), status_code=status.HTTP_400_BAD_REQUEST)
