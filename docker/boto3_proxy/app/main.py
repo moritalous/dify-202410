@@ -64,7 +64,7 @@ class RetrievalParams(BaseModel):
 
 
 @app.post("/retrieval", summary="Retrieve from Bedrock Knowledge Bases")
-def aws_api(input: RetrievalParams):
+def retrieval(input: RetrievalParams):
 
     try:
 
